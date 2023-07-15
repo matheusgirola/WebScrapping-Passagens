@@ -13,84 +13,10 @@ def hj(today = dt.datetime.today()):
     
     return hj
 
-test_df = pd.DataFrame(columns = ['Companhia', 
-                                  'Data de Coleta', 
-                                  'Data da Passagem', 
-                                  'Preço Mínimo',
-                                  'Média dos Preços'])
+df = pd.read_pickle(f"https://github.com/matheusgirola/WebScrapping-Passagens/blob/master/1_Dash_Data/{hj()}.pkl?raw=True")
 
-for folder in os.listdir('C:/Users/MATHEUS/Desktop/Biblioteca/Python/WebScrapping_Passagens/Azul/' + hj()):
-    try:
-        date_df = pd.read_pickle('C:/Users/MATHEUS/Desktop/Biblioteca/Python/WebScrapping_Passagens/Azul/' + hj() + '/'+ folder)
-        prices = date_df["Preço (R$)"]    
-    except:
-        prices = np.nan
-        
-    try:
-        min_price = prices.min()
-        avg_price = prices.mean()
-    except:
-        min_price = np.nan
-        avg_price = np.nan
-            
-    new_row = {'Companhia': 'Azul', 
-                'Data de Coleta': hj(), 
-                'Data da Passagem': folder[0:10], 
-                'Preço Mínimo': [min_price],
-                'Média dos Preços': round(avg_price, 2)}
-    test_df = pd.concat([test_df, pd.DataFrame.from_dict(new_row)])
-        
-for folder in os.listdir(f'C:/Users/MATHEUS/Desktop/Biblioteca/Python/WebScrapping_Passagens/Latam/' + hj()):
-    try:
-        date_df = pd.read_pickle('C:/Users/MATHEUS/Desktop/Biblioteca/Python/WebScrapping_Passagens/Latam/' + hj() + '/' + folder)
-        prices = date_df["Preço (R$)"]          
-    except:
-        prices = np.nan
-        
-    try:
-        min_price = prices.min()
-        avg_price = prices.mean()
-    except:
-        min_price = np.nan
-        avg_price = np.nan
-            
-    new_row = {'Companhia': 'Latam', 
-                'Data de Coleta': hj(), 
-                'Data da Passagem': folder[0:10], 
-                'Preço Mínimo': [min_price],
-                'Média dos Preços': round(avg_price, 2) }
-    test_df = pd.concat([test_df, pd.DataFrame.from_dict(new_row)])
-        
-for folder in os.listdir(f'C:/Users/MATHEUS/Desktop/Biblioteca/Python/WebScrapping_Passagens/Gol/' + hj()):
-    try:
-        date_df = pd.read_pickle('C:/Users/MATHEUS/Desktop/Biblioteca/Python/WebScrapping_Passagens/Gol/' + hj() + '/' + folder)
-        prices = date_df["Preço (R$)"]          
-    except:
-        prices = np.nan
-        
-    try:
-        min_price = prices.min()
-        avg_price = prices.mean()
-    except:
-        min_price = np.nan
-        avg_price = np.nan
-            
-    new_row = {'Companhia': 'Gol', 
-                'Data de Coleta': hj(), 
-                'Data da Passagem': folder[0:10], 
-                'Preço Mínimo': [min_price],
-                'Média dos Preços': round(avg_price, 2) }
-    test_df = pd.concat([test_df, pd.DataFrame.from_dict(new_row)])
 
-test_df['Data de Coleta'] = pd.to_datetime(test_df['Data de Coleta'], format='%d-%m-%Y')
-test_df['Data da Passagem'] = pd.to_datetime(test_df['Data da Passagem'], format='%d-%m-%Y')
-test_df = test_df.sort_values(by=['Data da Passagem'])
-#tmp = df[(df['Data de Coleta'] > '2023-06-30')]
-test_df['Data de Coleta'] = test_df['Data de Coleta'].astype(str)
-test_df['Data da Passagem'] = test_df['Data da Passagem'].astype(str)
-tmp = test_df[(test_df['Data de Coleta'] >= '2023-06-30')]    
-
-df = tmp
+# Dash App Part %---------------------------------------------------------------------------
 external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 
 app = Dash(__name__, external_stylesheets=external_stylesheets)
